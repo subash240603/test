@@ -1,0 +1,3 @@
+[submodule "admin_panel_complete"]
+	path = admin_panel_complete
+	url = https://github.com/subash240603/test.git
