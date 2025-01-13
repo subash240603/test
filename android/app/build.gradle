@@ -1,0 +1,77 @@
+// Load local.properties to access Flutter SDK path and other properties
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+// Retrieve the Flutter SDK path
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new Exception("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+// Retrieve or set default Flutter versionCode and versionName
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '1')
+def flutterVersionName = localProperties.getProperty('flutter.versionName', '1.0')
+
+// Apply plugins using the modern declarative block
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'io.flutter'
+}
+
+// Android configurations
+android {
+    compileSdkVersion 34 // Set to match the latest dependencies
+
+    defaultConfig {
+        // Application-specific configurations
+        applicationId "com.example.admin"
+        minSdkVersion 21 // Set to the minimum supported Android version
+        targetSdkVersion 34 // Align with compileSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            // Temporary signing config for debug; replace with your release signing config
+            signingConfig signingConfigs.debug
+            minifyEnabled false // Disable ProGuard for now; customize as needed
+            shrinkResources false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+// Flutter plugin configuration
+flutter {
+    source '../..'
+}
+
+// Dependencies
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10"
+    implementation "androidx.multidex:multidex:2.0.1" // Enable MultiDex support
+}
+
+// JVM Toolchain configuration for Gradle compatibility
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
